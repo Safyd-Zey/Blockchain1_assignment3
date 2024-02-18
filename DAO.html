@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAO Interface</title>
+    <style>
+        /* Простой стиль для разделения элементов интерфейса */
+        .divider {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>DAO Interface</h1>
+
+    <!-- Форма для добавления участника -->
+    <div class="divider">
+        <h2>Add Member</h2>
+        <form id="addMemberForm">
+            <label for="memberAddress">Member Address:</label>
+            <input type="text" id="memberAddress" name="memberAddress">
+            <button type="submit">Add Member</button>
+        </form>
+    </div>
+
+    <!-- Форма для создания предложения -->
+    <div class="divider">
+        <h2>Create Proposal</h2>
+        <form id="createProposalForm">
+            <label for="proposalDesc">Proposal Description:</label>
+            <input type="text" id="proposalDesc" name="proposalDesc">
+            <button type="submit">Create Proposal</button>
+        </form>
+    </div>
+
+    <!-- Форма для голосования -->
+    <div class="divider">
+        <h2>Vote for Proposal</h2>
+        <form id="voteForm">
+            <label for="proposalId">Proposal ID:</label>
+            <input type="number" id="proposalId" name="proposalId">
+            <label for="tokenAmount">Token Amount:</label>
+            <input type="number" id="tokenAmount" name="tokenAmount">
+            <button type="submit">Vote</button>
+        </form>
+    </div>
+
+    <!-- Форма для выполнения предложения -->
+    <div class="divider">
+        <h2>Execute Proposal</h2>
+        <form id="executeProposalForm">
+            <label for="executeProposalId">Proposal ID:</label>
+            <input type="number" id="executeProposalId" name="executeProposalId">
+            <button type="submit">Execute Proposal</button>
+        </form>
+    </div>
+
+    <!-- Скрипт для взаимодействия с контрактом через Web3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.0/web3.min.js"></script>
+    <script>
+        // Подключаемся к локальному узлу Ethereum (замените на актуальный RPC-узел)
+        const web3 = new Web3("http://localhost:8545");
+        // Замените на адрес вашего контракта
+        const contractAddress = "YOUR_CONTRACT_ADDRESS";
+        // Замените на ABI вашего контракта
+        const contractABI = [
+            // Здесь перечислите ABI вашего контракта
+        ];
+        // Создаем экземпляр контракта
+        const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+        // Обработчик события добавления участника
+        document.getElementById("addMemberForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const memberAddress = event.target.memberAddress.value;
+            await contract.methods.addMember(memberAddress).send({ from: web3.eth.defaultAccount });
+            alert("Member added successfully!");
+        });
+
+        // Обработчик события создания предложения
+        document.getElementById("createProposalForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const proposalDesc = event.target.proposalDesc.value;
+            await contract.methods.createProposal(proposalDesc).send({ from: web3.eth.defaultAccount });
+            alert("Proposal created successfully!");
+        });
+
+        // Обработчик события голосования
+        document.getElementById("voteForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const proposalId = event.target.proposalId.value;
+            const tokenAmount = event.target.tokenAmount.value;
+            await contract.methods.vote(proposalId, tokenAmount).send({ from: web3.eth.defaultAccount });
+            alert("Vote cast successfully!");
+        });
+
+        // Обработчик события выполнения предложения
+        document.getElementById("executeProposalForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const executeProposalId = event.target.executeProposalId.value;
+            await contract.methods.executeProposal(executeProposalId).send({ from: web3.eth.defaultAccount });
+            alert("Proposal executed successfully!");
+        });
+    </script>
+</body>
+</html>
